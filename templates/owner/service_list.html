@@ -1,0 +1,92 @@
+<!-- templates/owner/service_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Manage Services - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block sidebar">
+            <div class="position-sticky pt-3">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Owner Panel</span>
+                </h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:owner_dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'shop:owner_product_list' %}">
+                            <i class="fas fa-box"></i> Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'services:owner_service_list' %}">
+                            <i class="fas fa-concierge-bell"></i> Services
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'services:owner_request_list' %}">
+                            <i class="fas fa-envelope"></i> Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:owner_banner_list' %}">
+                            <i class="fas fa-images"></i> Banners
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Manage Services</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a href="{% url 'services:service_create' %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus"></i> Add New Service
+                    </a>
+                </div>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="row">
+                {% for service in services %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <i class="{{ service.icon|default:'fas fa-concierge-bell' }} fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">{{ service.title }}</h5>
+                            <p class="card-text">{{ service.description|truncatewords:20 }}</p>
+                            <p class="mb-2">
+                                <span class="badge bg-secondary">{{ service.get_service_type_display }}</span>
+                                {% if service.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'services:service_update' service.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-muted text-center">No services found. Click "Add New Service" to create one.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

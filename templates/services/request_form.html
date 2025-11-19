@@ -1,0 +1,43 @@
+<!-- templates/services/request_form.html -->
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Submit Request - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Submit Request: {{ service.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">{{ service.description }}</p>
+                    
+                    {% if service.service_type == 'appointment' or service.service_type == 'online_appointment' %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> 
+                        Please provide your preferred date and time for the appointment in the message field.
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        {% if request.GET.product %}
+                        <div class="alert alert-secondary">
+                            <strong>Product:</strong> {{ request.GET.product }}
+                        </div>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                        <a href="{% url 'services:service_list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

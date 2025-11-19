@@ -1,0 +1,37 @@
+<!-- templates/owner/banner_form.html -->
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if object %}Update{% else %}Add{% endif %} Banner - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{% if object %}Update{% else %}Add New{% endif %} Banner</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        {% if object and object.image %}
+                        <div class="mb-3">
+                            <label>Current Image:</label><br>
+                            <img src="{{ object.image.url }}" alt="{{ object.title }}" style="max-height: 200px;">
+                        </div>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-primary">
+                            {% if object %}Update{% else %}Create{% endif %} Banner
+                        </button>
+                        <a href="{% url 'core:owner_banner_list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

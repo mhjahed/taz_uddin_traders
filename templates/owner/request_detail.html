@@ -1,0 +1,93 @@
+<!-- templates/owner/request_detail.html -->
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Request Detail - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Request Details -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Request Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Client:</strong> {{ request.user.get_full_name|default:request.user.username }}<br>
+                            <strong>Email:</strong> {{ request.user.email }}<br>
+                            <strong>Phone:</strong> {{ request.user.phone|default:"Not provided" }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Service:</strong> {{ request.service.title }}<br>
+                            <strong>Type:</strong> {{ request.service.get_service_type_display }}<br>
+                            <strong>Date:</strong> {{ request.created_at|date:"Y-m-d H:i" }}
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5>Subject: {{ request.subject }}</h5>
+                    <p>{{ request.message|linebreaks }}</p>
+                    
+                    <div class="mt-3">
+                        <strong>Current Status:</strong>
+                        <span class="badge bg-{% if request.status == 'pending' %}warning{% elif request.status == 'completed' %}success{% elif request.status == 'cancelled' %}danger{% else %}info{% endif %}">
+                            {{ request.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversation Thread -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Conversation</h5>
+                </div>
+                <div class="card-body">
+                    {% for reply in replies %}
+                    <div class="mb-3 {% if reply.user == request.user %}text-start{% else %}text-end{% endif %}">
+                        <div class="d-inline-block p-3 rounded {% if reply.user == request.user %}bg-light{% else %}bg-primary text-white{% endif %}" style="max-width: 75%;">
+                            <strong>{{ reply.user.username }}</strong>
+                            <small class="d-block">{{ reply.created_at|date:"Y-m-d H:i" }}</small>
+                            <p class="mb-0 mt-2">{{ reply.message|linebreaks }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center">No replies yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Reply Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Send Reply</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Update Status</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">-- Keep Current Status --</option>
+                                <option value="pending" {% if request.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="in_progress" {% if request.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="completed" {% if request.status == 'completed' %}selected{% endif %}>Completed</option>
+                                <option value="cancelled" {% if request.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Reply</button>
+                        <a href="{% url 'services:owner_request_list' %}" class="btn btn-secondary">Back to List</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+<!-- templates/public/home.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+{% if banners %}
+<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for banner in banners %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <img src="{{ banner.image.url }}" class="d-block w-100" alt="{{ banner.title }}">
+            <div class="carousel-caption">
+                <h2 style="color:rgb(255, 17, 136); font-weight: bold;">{{ banner.title }}</h2>
+                {% if banner.subtitle %}
+                <p>{{ banner.subtitle }}</p>
+                {% endif %}
+                {% if banner.link_url %}
+                <a href="{{ banner.link_url }}" class="btn btn-primary">Learn More</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if banners.count > 1 %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Welcome Section -->
+<section class="py-5">
+    <div class="container text-left">
+        <h1 class="display-4 mb-4">From Retail to Wholesale <br> We've Got You Covered</h1>
+        <p class="lead">Whether it's a home improvement project or a personal one, we have the tools to get the job done.</p>
+        <p>We specialize in bulk supply of cement, steel rods, ceramics, paints, electrical and plumbing materials.</p>
+    </div>
+    
+</section>
+
+<!-- Categories Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Shop by Category</h2>
+        <div class="row">
+            {% for category in featured_categories %}
+            <div class="col-md-4 col-lg-2 mb-4">
+                <a href="{% url 'shop:category_products' category.slug %}" class="text-decoration-none">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="{{ category.icon|default:'fas fa-box' }} fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">{{ category.name }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'shop:product_list' %}" class="btn btn-primary">View All Categories</a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Featured Products</h2>
+        <div class="row">
+            {% for product in featured_products %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100 product-card">
+                    <div class="product-image-container">
+                    {% if product.images.exists %}
+                    <img src="{{ product.images.first.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="{% static 'img/no-image.png' %}" class="card-img-top" alt="No image">
+                    {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="stock-badge {% if product.is_in_stock %}in-stock{% else %}out-of-stock{% endif %}">
+                                {% if product.is_in_stock %}In Stock{% else %}Out of Stock{% endif %}
+                            </span>
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Our Services</h2>
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-truck fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Bulk Orders</h5>
+                        <p class="card-text">Wholesale pricing for large quantity orders</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Appointments</h5>
+                        <p class="card-text">Schedule in-person or online consultations</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Fast Track Help</h5>
+                        <p class="card-text">Priority support for urgent requirements</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Membership</h5>
+                        <p class="card-text">Exclusive benefits for regular customers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'services:service_list' %}" class="btn btn-primary">Explore All Services</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

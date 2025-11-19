@@ -1,0 +1,13 @@
+<!-- templates/500.html -->
+{% extends 'base.html' %}
+
+{% block title %}Server Error - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <h1 class="display-1">500</h1>
+    <h2>Server Error</h2>
+    <p>Something went wrong. We're working on it!</p>
+    <a href="{% url 'core:home' %}" class="btn btn-primary">Go Home</a>
+</div>
+{% endblock %}

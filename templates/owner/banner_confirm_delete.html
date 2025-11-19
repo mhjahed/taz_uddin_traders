@@ -1,0 +1,30 @@
+<!-- templates/owner/banner_confirm_delete.html -->
+{% extends 'base.html' %}
+
+{% block title %}Delete Banner - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Delete Banner</h4>
+                </div>
+                <div class="card-body">
+                    <p>Are you sure you want to delete this banner?</p>
+                    <h5>{{ object.title }}</h5>
+                    <p class="text-muted">{{ object.subtitle }}</p>
+                    <img src="{{ object.image.url }}" alt="{{ object.title }}" style="max-height: 200px;" class="mb-3">
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        <a href="{% url 'core:owner_banner_list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

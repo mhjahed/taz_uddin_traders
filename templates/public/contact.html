@@ -1,0 +1,105 @@
+<!-- templates/public/contact.html -->
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Contact Us</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Send us a message</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="phone" name="phone">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message *</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Contact Information</h5>
+                    <p class="mb-2">
+                        <i class="fas fa-map-marker-alt text-primary"></i> 
+                        Tamabil Road, Tilaghar, Sylhet
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-phone text-primary"></i> 
+                        +880 1861407670
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-envelope text-primary"></i> 
+                        tazuddintraders@gmail.com
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Business Hours</h5>
+                    <p class="mb-1"><strong>Saturday - Wednesday:</strong> 9:00 AM - 7:00 PM</p>
+                    <p class="mb-1"><strong>Thursday:</strong> 9:00 AM - 5:00 PM</p>
+                    <p class="mb-0"><strong>Friday:</strong> Closed</p>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Developer</h5>
+                    <p class="mb-2">
+                        <i class="fas fa-phone text-primary"></i> 
+                        +880 1861407670
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-envelope text-primary"></i> 
+                        langchainjahed@gmail.com
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-globe text-primary"></i> 
+                            <a href="https://profilemhjahed.netlify.app" target="_blank" rel="noopener noreferrer">Website</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Google Map -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Find Us</h5>
+                    <div style="height: 400px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                        <p class="text-muted">Google Map Integration -Coming soon-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

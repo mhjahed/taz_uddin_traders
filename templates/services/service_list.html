@@ -1,0 +1,48 @@
+<!-- templates/services/service_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Services - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-5">Our Services</h1>
+    
+    <!-- Banners -->
+    {% if banners %}
+    <div class="row mb-4">
+        {% for banner in banners %}
+        <div class="col-12 mb-3">
+            <img src="{{ banner.image.url }}" class="img-fluid rounded" alt="{{ banner.title }}">
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        {% for service in services %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="{{ service.icon|default:'fas fa-cogs' }} fa-3x text-primary mb-3"></i>
+                    <h4 class="card-title">{{ service.title }}</h4>
+                    <p class="card-text">{{ service.description }}</p>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'services:create_request' service.id %}" class="btn btn-primary">
+                            Submit Request
+                        </a>
+                    {% else %}
+                        <p class="text-muted">
+                            <a href="{% url 'accounts:login' %}">Login</a> to submit a request
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">No services available at the moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

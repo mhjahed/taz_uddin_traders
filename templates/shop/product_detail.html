@@ -1,0 +1,115 @@
+<!-- templates/shop/product_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'shop:product_list' %}">Shop</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'shop:category_products' product.category.slug %}">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active">{{ product.name }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6">
+            {% if product.images.exists %}
+            <div id="productImages" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in product.images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if product.images.count > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#productImages" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productImages" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+                {% endif %}
+            </div>
+            {% else %}
+            <img src="{% static 'img/no-image.png' %}" class="img-fluid" alt="No image">
+            {% endif %}
+        </div>
+        
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <h1 class="h2">{{ product.name }}</h1>
+            <p class="text-muted">Category: {{ product.category.name }}</p>
+            
+            <div class="mb-3">
+                <span class="stock-badge {% if product.is_in_stock %}in-stock{% else %}out-of-stock{% endif %}">
+                    {% if product.is_in_stock %}
+                        <i class="fas fa-check-circle"></i> In Stock ({{ product.stock_quantity }} units available)
+                    {% else %}
+                        <i class="fas fa-times-circle"></i> Out of Stock
+                    {% endif %}
+                </span>
+            </div>
+            
+            <div class="mb-4">
+                <h5>Description</h5>
+                <p>{{ product.description|linebreaks }}</p>
+            </div>
+            
+            <div class="mb-4">
+                <p><strong>Minimum Order Quantity:</strong> {{ product.minimum_order }} units</p>
+            </div>
+            
+            {% if product.is_in_stock %}
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title">Request Bulk Order</h5>
+                    <p class="card-text">For pricing and bulk order inquiries, please submit a request.</p>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'services:create_request' service_id=4 %}" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart"></i> Request Quote
+                        </a>
+                    {% else %}
+                        <p class="text-muted mt-3">Please <a href="{% url 'accounts:login' %}">login</a> to request a quote.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-warning">
+                <i class="fas fa-info-circle"></i> This product is currently out of stock. Please check back later or contact us for availability.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="mt-5">
+        <h3>Related Products</h3>
+        <div class="row">
+            {% for related in related_products %}
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="card h-100">
+                    {% if related.images.exists %}
+                    <img src="{{ related.images.first.image.url }}" class="card-img-top" alt="{{ related.name }}">
+                    {% else %}
+                    <img src="{% static 'img/no-image.png' %}" class="card-img-top" alt="No image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ related.name }}</h5>
+                        <p class="card-text">{{ related.description|truncatewords:10 }}</p>
+                        <a href="{{ related.get_absolute_url }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+<!-- templates/owner/product_form.html -->
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if object %}Update{% else %}Add{% endif %} Product - TAZ UDDIN TRADERS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{% if object %}Update{% else %}Add New{% endif %} Product</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        <h5 class="mt-4">Product Images</h5>
+                        {{ image_formset.management_form }}
+                        <div id="image-forms">
+                            {% for form in image_formset %}
+                            <div class="border p-3 mb-3">
+                                {{ form|crispy }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            {% if object %}Update{% else %}Create{% endif %} Product
+                        </button>
+                        <a href="{% url 'shop:owner_product_list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

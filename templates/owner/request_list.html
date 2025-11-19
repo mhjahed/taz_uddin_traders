@@ -1,0 +1,141 @@
+<!-- templates/owner/request_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Manage Requests - TAZ UDDIN TRADERS{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block sidebar">
+            <div class="position-sticky pt-3">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Owner Panel</span>
+                </h6>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:owner_dashboard' %}">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'shop:owner_product_list' %}">
+                            <i class="fas fa-box"></i> Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'services:owner_service_list' %}">
+                            <i class="fas fa-concierge-bell"></i> Services
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'services:owner_request_list' %}">
+                            <i class="fas fa-envelope"></i> Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:owner_banner_list' %}">
+                            <i class="fas fa-images"></i> Banners
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Client Requests</h1>
+            </div>
+
+            <!-- Filter -->
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <form method="get" class="d-flex">
+                        <select name="status" class="form-select me-2" style="width: auto;">
+                            <option value="">All Status</option>
+                            <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="in_progress" {% if request.GET.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                            <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
+                            <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                        <select name="service_type" class="form-select me-2" style="width: auto;">
+                            <option value="">All Types</option>
+                            <option value="membership" {% if request.GET.service_type == 'membership' %}selected{% endif %}>Membership</option>
+                            <option value="appointment" {% if request.GET.service_type == 'appointment' %}selected{% endif %}>Appointment</option>
+                            <option value="order" {% if request.GET.service_type == 'order' %}selected{% endif %}>Order</option>
+                            <option value="complaint" {% if request.GET.service_type == 'complaint' %}selected{% endif %}>Complaint</option>
+                        </select>
+                        <button class="btn btn-outline-secondary" type="submit">Filter</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Requests Table -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Service</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in requests %}
+                        <tr>
+                            <td>{{ request.created_at|date:"Y-m-d H:i" }}</td>
+                            <td>{{ request.user.username }}</td>
+                            <td>{{ request.service.title }}</td>
+                            <td>{{ request.subject|truncatechars:30 }}</td>
+                            <td>
+                                <span class="badge bg-{% if request.status == 'pending' %}warning{% elif request.status == 'completed' %}success{% elif request.status == 'cancelled' %}danger{% else %}info{% endif %}">
+                                    {{ request.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'services:owner_request_detail' request.pk %}" class="btn btn-sm btn-primary">
+                                    View & Reply
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No requests found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}
